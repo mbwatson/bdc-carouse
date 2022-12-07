@@ -1,53 +1,39 @@
-import { Fragment } from 'react'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { panelType } from './types'
+import { CarouselPanel } from './panels'
 
-export const Carousel = ({ data }) => {
+const INTERVAL = 2000 // ms
+
+const wrapperStyle = {
+  border: '2px solid #456',
+  margin: '1rem',
+  padding: '1rem',
+  minHeight: '400px',
+  maxHeight: '400px',
+  display: 'flex',
+}
+
+export const Carousel = ({ panels }) => {
+  const [carouselIndex, setCarouselIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setCarouselIndex((carouselIndex + 1) % panels.length),
+      INTERVAL,
+    )
+    return () => clearInterval(timer)
+  }, [carouselIndex])
+
   return (
-    <Fragment>
-      <h1>carousel!</h1>
-      <pre>{ JSON.stringify(data, null, 2) }</pre>
-    </Fragment>
+    <div style={ wrapperStyle }>
+      <CarouselPanel data={ panels[carouselIndex] } />
+    </div>
   )
 }
 
 //
 
-const testomonialType = PropTypes.shape({
-  quote: PropTypes.string.isRequired,
-  attribution: PropTypes.string.isRequired,
-})
-
-const statsType = PropTypes.shape({
-  headline: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  stats: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-})
-
-const datasetInfoType = PropTypes.shape({
-  headline: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-})
-
 Carousel.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.oneOf([
-        'testimonial', 'stats', 'dataset-info'
-      ]),
-      content: PropTypes.oneOfType([
-        testomonialType, statsType, datasetInfoType
-      ]).isRequired,
-    })
-  )
+  panels: PropTypes.arrayOf(panelType)
 }

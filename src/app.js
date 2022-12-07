@@ -40,6 +40,10 @@ const carouselData = [
           name: 'thing b',
           value: 200
         },
+        {
+          name: 'thing c',
+          value: 300
+        },
       ]
     }
   },
@@ -48,7 +52,7 @@ const carouselData = [
 export const App = () => {
   return (
     <Fragment>
-      <Carousel data={ carouselData } />
+      <Carousel panels={ carouselData } />
     </Fragment>
   )
 }
